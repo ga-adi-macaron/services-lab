@@ -44,4 +44,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, MusicService.class));
+        super.onDestroy();
+
+    }
 }

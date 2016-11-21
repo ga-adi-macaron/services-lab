@@ -58,7 +58,6 @@ public class MusicService extends Service {
             message.obj = MainActivity.STOP;
         }
         mHandler.sendMessage(message);
-
         return START_STICKY;
     }
 

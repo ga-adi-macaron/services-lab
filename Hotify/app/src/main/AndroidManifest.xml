@@ -17,7 +17,8 @@
         </activity>
 
         <service
-            android:name=".MusicService">
+            android:name=".MusicService"
+            android:process=":remote">
         </service>
     </application>
 
