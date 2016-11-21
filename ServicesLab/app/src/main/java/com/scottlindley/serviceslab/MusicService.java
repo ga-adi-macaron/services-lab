@@ -30,7 +30,7 @@ public class MusicService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        mPlayer = MediaPlayer.create(MusicService.this, R.raw.my_song);
+
         HandlerThread handlerThread = new HandlerThread("MusicServiceThread");
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -63,11 +63,20 @@ public class MusicService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(mPlayer == null){
-            mPlayer = MediaPlayer.create(MusicService.this, R.raw.my_song);
-        }
         Message message = mHandler.obtainMessage();
         message.obj = intent.getStringExtra(MainActivity.INTENT_ACTION_KEY);
+        String song = intent.getStringExtra(MainActivity.INTENT_SONG_KEY);
+        if(mPlayer == null) {
+            switch (song) {
+                case MainActivity.NESSUN_DORMA:
+                    mPlayer = MediaPlayer.create(MusicService.this, R.raw.my_song);
+                    break;
+                case MainActivity.RAINDROP_PRELUDE:
+                    mPlayer = MediaPlayer.create(MusicService.this, R.raw.my_song_2);
+                    break;
+            }
+        }
+
         Log.d(TAG, "onStartCommand: "+message.obj.toString());
         mHandler.sendMessage(message);
         return START_NOT_STICKY;
