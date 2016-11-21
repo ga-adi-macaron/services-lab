@@ -33,3 +33,9 @@ An Android Studio project, with no particular format. It just has to meet the re
 
 - [Services | Android Developers](http://developer.android.com/reference/android/app/Service.html)
 - [MediaPlayer](https://developer.android.com/guide/topics/media/mediaplayer.html)
+
+---
+
+## Licensing
+1. All content is licensed under a CC­BY­NC­SA 4.0 license.
+2. All software code is licensed under GNU GPLv3. For commercial use or alternative licensing, please contact [legal@ga.co](mailto:legal@ga.co).
