@@ -75,8 +75,10 @@ public class MediaPlayerService2 extends Service {
 
                         break;
                     case "pause":
-                        if (mPlayer.isPlaying()) {
-                            mPlayer.pause();
+                        if (mPlayer != null) {
+                            if (mPlayer.isPlaying()) {
+                                mPlayer.pause();
+                            }
                         }
                         break;
                     case "stop":
@@ -102,7 +104,7 @@ public class MediaPlayerService2 extends Service {
         mHandler.sendMessage(message);
         return START_NOT_STICKY;
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();

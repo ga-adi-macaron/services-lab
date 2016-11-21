@@ -48,8 +48,6 @@ public class MediaPlayerService extends IntentService {
         if (pause.equals("pause")) {
             mPlayer.pause();
         }
-
-
     }
 
 }

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MediaPlayerService2.class);
                 intent.putExtra("action", "stop");
                 startService(intent);
+                stopService(intent);
             }
         });
 
