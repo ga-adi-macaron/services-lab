@@ -4,7 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,10 +21,8 @@ import java.io.IOException;
 
 public class BoomService extends Service {
 
-    public static final String MUSIC_URL = "http://wapclash.com/mp3/download-file.php?id=173189350";
-    private static final String TAG = "MusicStreamService";
-
-    private static MediaPlayer mediaPlayer;
+    private MediaPlayer mMediaPlayer;
+    private Handler mHandler;
 
     @Nullable
     @Override
@@ -31,82 +33,44 @@ public class BoomService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        String url = MUSIC_URL; // your URL here
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, TAG + " Created");
+
+        mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.just_a_little_bit_of_you); 
+
+        HandlerThread handlerThread = new HandlerThread("MusicThread");
+        handlerThread.start();
+
+        Looper looper = handlerThread.getLooper();
+
+        mHandler = new Handler(looper) {
+
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+
+                } else {
+                    mMediaPlayer.start();
+                }
+            }
+        };
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "Service Started, should do some work");
 
-        // create thread and pass in a runnable task
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mediaPlayer.prepare(); // might take long! (for buffering, etc)
-
-                    Log.i(TAG,"Service is done working!");
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-            }
-        });
-
-        // start the thread
-        thread.start();
-
-        // toast after the "work" was finished
-        Toast.makeText(getApplicationContext(), "Service work is happening", Toast.LENGTH_SHORT).show();
-
+        Message message = mHandler.obtainMessage();
+        message.obj = "Music";
+        mHandler.sendMessage(message);
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "Service Destroyed");
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
-    }
 
-    public static void playMediaPlayer(){
-        if (mediaPlayer != null){
-
-            mediaPlayer.start();
-        }
-
-//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mediaPlayer) {
-//                mediaPlayer.start();
-//            }
-//        });
-    }
-
-    public static void pauseMediaPlayer(){
-        if (mediaPlayer != null){
-            mediaPlayer.pause();
-        }
-    }
-
-    public static void stopMediaPlayer() {
-
-        if (mediaPlayer != null) {
-//            mediaPlayer.stop();
-            mediaPlayer.pause();
-            mediaPlayer.seekTo(0);
-        }
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
     }
 }

@@ -43,18 +43,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, BoomService.class);
+                startService(intent);
 
             }
         });
 
-        mPause.setOnClickListener(new View.OnClickListener() {
+        /**mPause.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(MainActivity.this, BoomService.class);
             }
-        });
+        });*/
 
         mStop.setOnClickListener(new View.OnClickListener() {
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(MainActivity.this, BoomService.class);
+                stopService(intent);
             }
         });
     }
